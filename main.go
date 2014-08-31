@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	//"io/ioutil"
 	"net/http"
@@ -23,7 +24,8 @@ func do_send() int {
 	data.Add("languageChanged", "no")
 	data.Add("control6521519", "odin.troll")
 	data.Add("control6521520", "odin.troll@mail.ru")
-	data.Add("control6521521", "What are all patches ? Stop selling !!! ")
+	data.Add("control6521521",
+		"The Hells Angels name, wing logo and 81 are copyrighted. Please delete this from your store.!! ")
 	data.Add("go_back_and_edit", "0")
 	data.Add("PHPSESSID", "seoecorp0m2n4021mi9j8rrrt2")
 	data.Add("hiddenfields", "")
@@ -44,11 +46,15 @@ func do_send() int {
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	r.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 	resp, _ := client.Do(r)
-	defer resp.Body.Close()
+
 	if resp == nil {
 		return -1
 	}
 
+	if resp.Body == nil {
+		return -2
+	}
+	defer resp.Body.Close()
 	/*contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Printf("%s", err)
@@ -60,8 +66,12 @@ func do_send() int {
 }
 
 func main() {
-	max := 50
-	for i := 0; i < max; i++ {
+	//var send_number int
+	send_qnt := flag.Int("qnt", 5, "quantity of sending request")
+
+	flag.Parse()
+
+	for i := 0; i < *send_qnt; i++ {
 		resp := do_send()
 		fmt.Printf("Send %d with result %d.", i, resp)
 		fmt.Println("")
